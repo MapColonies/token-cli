@@ -8,25 +8,25 @@ import { generateKeyPair } from '../crypto';
 
 export interface GenerateKeyArguments {
   [x: string]: unknown;
-  id: string;
+  kid: string;
   s: boolean | undefined;
-  f: string | undefined;
+  p: string | undefined;
 }
 
-export const command = 'generate-key <id>';
+export const command = 'generate-key';
 
 export const describe = 'generate a new key pair for signing tokens';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const builder: yargs.CommandBuilder<{}, GenerateKeyArguments> = (yargs) => {
   yargs
-    .positional('id', { alias: 'kid', description: 'The id to assign to the key pair.' })
+    .option('kid', { alias: 'id', description: 'The key id to assign to the key pair.' })
     .option('s', { alias: 'stdout', type: 'boolean', description: 'output key pairs to stdout in json format.' })
-    .option('f', { alias: 'file-path', type: 'string', description: 'folder path to save the key pair to.' })
-    .conflicts('f', 's')
+    .option('p', { alias: ['path', 'files-path'], type: 'string', description: 'folder path to save the key pair to.' })
+    .conflicts('p', 's')
     .check((argv) => {
-      if (argv.f !== undefined && (argv.f === '' || !existsSync(argv.f))) {
-        throw new Error('file-path not valid');
+      if (argv.p !== undefined && (argv.p === '' || !existsSync(argv.p))) {
+        throw new Error('the path to the files is not valid');
       }
       return true;
     });
@@ -34,11 +34,11 @@ export const builder: yargs.CommandBuilder<{}, GenerateKeyArguments> = (yargs) =
 };
 
 export const handler = async (argv: GenerateKeyArguments): Promise<void> => {
-  const { privateKey, publicKey } = await spinify(generateKeyPair, { message: 'generating key', timeout: 5000 });
-  privateKey.kid = publicKey.kid = argv.id;
+  const { privateKey, publicKey } = await spinify(generateKeyPair, { message: 'generating key', timeout: 2000 });
+  privateKey.kid = publicKey.kid = argv.kid;
   privateKey.alg = publicKey.alg = 'RSA256';
 
-  const path = argv.f;
+  const path = argv.p;
   if (path !== undefined) {
     try {
       await spinify(
