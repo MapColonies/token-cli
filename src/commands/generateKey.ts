@@ -20,7 +20,7 @@ export const describe = 'generate a new key pair for signing tokens';
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const builder: yargs.CommandBuilder<{}, GenerateKeyArguments> = (yargs) => {
   yargs
-    .option('kid', { alias: 'id', description: 'The key id to assign to the key pair.' })
+    .option('i', { alias: ['id', 'kid'], description: 'The key id to assign to the key pair.', demandOption: true })
     .option('s', { alias: 'stdout', type: 'boolean', description: 'output key pairs to stdout in json format.' })
     .option('p', { alias: ['path', 'files-path'], type: 'string', description: 'folder path to save the key pair to.' })
     .conflicts('p', 's')
@@ -34,9 +34,7 @@ export const builder: yargs.CommandBuilder<{}, GenerateKeyArguments> = (yargs) =
 };
 
 export const handler = async (argv: GenerateKeyArguments): Promise<void> => {
-  const { privateKey, publicKey } = await spinify(generateKeyPair, { message: 'generating key', timeout: 2000 });
-  privateKey.kid = publicKey.kid = argv.kid;
-  privateKey.alg = publicKey.alg = 'RSA256';
+  const { privateKey, publicKey } = await spinify(generateKeyPair, { message: 'generating key', timeout: 2000 }, argv.kid);
 
   const path = argv.p;
   if (path !== undefined) {
@@ -53,6 +51,6 @@ export const handler = async (argv: GenerateKeyArguments): Promise<void> => {
       process.exit(1);
     }
   } else {
-    console.log({ publicKey: publicKey, privateKey: privateKey });
+    console.log(JSON.stringify({ publicKey: publicKey, privateKey: privateKey }));
   }
 };

@@ -9,6 +9,7 @@ module.exports = {
   rootDir: '../../../.',
   testMatch: ['<rootDir>/tests/integration/**/*.spec.ts'],
   setupFiles: ['<rootDir>/tests/configurations/jest.setup.js'],
+  globalTeardown: '<rootDir>/tests/configurations/jest.teardown.js',
   reporters: [
     'default',
     [

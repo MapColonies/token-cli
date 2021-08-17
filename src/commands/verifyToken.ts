@@ -1,14 +1,6 @@
-import { readFile } from 'fs/promises';
-import readline from 'readline';
 import yargs from 'yargs';
-import { parseJwk } from 'jose/jwk/parse';
-import chalk from 'chalk';
-import Ajv from 'ajv/dist/jtd';
-import { jwkSchema } from '../schemas/jwk';
-import { verifyToken } from '../crypto';
-
-const ajv = new Ajv();
-const jwkStringParser = ajv.compileParser(jwkSchema);
+import { readAndParseJWK, verifyToken } from '../crypto';
+import { spinify } from '../util';
 
 export interface VerifyArguments {
   [x: string]: unknown;
@@ -16,7 +8,7 @@ export interface VerifyArguments {
   token: string;
 }
 
-export const command = 'verify <jwk-path> <token>';
+export const command = 'verify';
 
 export const describe = 'verify that a token is signed by the provided key, and return its payload';
 
@@ -28,13 +20,7 @@ export const builder: yargs.CommandBuilder<{}, VerifyArguments> = (yargs) => {
 };
 
 export const handler = async (argv: VerifyArguments): Promise<void> => {
-  const fileContent = await readFile(argv.f, 'utf-8');
-  const jwk = jwkStringParser(fileContent);
-  if (!jwk) {
-    console.error(chalk.red('could not parse jwk.'));
-    process.exit(1);
-  }
-  const publicKey = await parseJwk(jwk);
-  const payload = await verifyToken(publicKey, argv.token);
+  const publicKey = await spinify(readAndParseJWK, { message: 'reading and parsing the public key', timeout: 1500 }, argv.f);
+  const payload = await spinify(verifyToken, { message: 'verifying token', timeout: 1000 }, publicKey, argv.token);
   console.log(payload);
 };

@@ -5,7 +5,7 @@ import * as verifyToken from './commands/verifyToken';
 
 const argsIndex = 2;
 
-const argv = yargs(process.argv.slice(argsIndex))
+void yargs(process.argv.slice(argsIndex))
   .command<generateKey.GenerateKeyArguments>(generateKey)
   .command(signToken)
   .command(verifyToken)

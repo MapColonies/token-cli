@@ -1,7 +1,7 @@
 import { setTimeout as asyncSetTimeout } from 'timers/promises';
 import ora from 'ora';
 
-export const isTesting = process.env.NODE_ENV === 'testing';
+export const isTesting = process.env.NODE_ENV === 'test';
 
 export const spinify = async <R, A extends unknown[], F extends (...args: A) => Promise<R>>(
   func: F,

@@ -1,14 +1,6 @@
-import { readFile } from 'fs/promises';
-import Ajv from 'ajv/dist/jtd';
 import yargs from 'yargs';
-import { parseJwk } from 'jose/jwk/parse';
-import chalk from 'chalk';
-import { generateToken } from '../crypto';
-import { jwkSchema } from '../schemas/jwk';
+import { generateToken, readAndParseJWK } from '../crypto';
 import { spinify } from '../util';
-
-const ajv = new Ajv();
-const jwkStringParser = ajv.compileParser(jwkSchema);
 
 export interface GenerateTokenArguments {
   [x: string]: unknown;
@@ -24,7 +16,11 @@ export const describe = 'generate a jwt token';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs) => {
-  yargs.option('f', { alias: ['private-key-file', 'key-file'], description: 'path to load the private key (in jwk format) from' });
+  yargs.option('f', {
+    alias: ['private-key-file', 'key-file'],
+    description: 'path to load the private key (in jwk format) from',
+    demandOption: true,
+  });
   yargs.option('c', { alias: 'client', type: 'string', description: 'the name of the client', demandOption: true });
   yargs.option('o', {
     alias: 'origin',
@@ -36,22 +32,9 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
 };
 
 export const handler = async (argv: GenerateTokenArguments): Promise<void> => {
-  const jwk = await spinify(
-    async () => {
-      const fileContent = await readFile(argv.f, 'utf-8');
-      return jwkStringParser(fileContent);
-    },
-    { message: 'loading the private key', timeout: 2000 }
-  );
+  const privateKey = await spinify(readAndParseJWK, { message: 'reading and parsing the private key', timeout: 2000 }, argv.f);
 
-  if (!jwk) {
-    console.error(chalk.red('could not parse jwk.'));
-    process.exit(1);
-  }
-
-  const privateKey = await parseJwk(jwk);
-
-  const token = await spinify(generateToken, { message: 'creating token', timeout: 2000 }, privateKey, argv.client, argv.o);
+  const token = await spinify(generateToken, { message: 'generating token', timeout: 2000 }, privateKey, argv.client, argv.o);
 
   console.log(token);
 };

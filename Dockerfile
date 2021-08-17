@@ -8,22 +8,10 @@ COPY ./package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
+RUN npx pkg -t node16-alpine ./dist/package.json
 
-FROM node:16-alpine3.14 as production
+FROM alpine:3.14
 
-ENV NODE_ENV=production
-ENV SERVER_PORT=8080
+COPY --from=build /tmp/buildApp/token-cli /usr/bin/token-cli
 
-
-WORKDIR /usr/src/app
-
-COPY --chown=node:node package*.json ./
-
-RUN npm ci --only=production
-
-COPY --chown=node:node --from=build /tmp/buildApp/dist .
-COPY --chown=node:node ./config ./config
-
-USER node
-EXPOSE 8080
-ENTRYPOINT [ "node", "index.js" ]
+ENTRYPOINT [ "token-cli" ]
