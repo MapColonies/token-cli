@@ -36,9 +36,6 @@ export const executeCli = async (args: string[] = [], opts: { env: Env } = { env
   const childProcess = createProcess('./src/index.ts', args, env);
   childProcess.stdin.setDefaultEncoding('utf-8');
   const promise = new Promise<ExecuteReturn>((resolve, reject) => {
-    // childProcess.stderr.once('data', (err: string) => {
-    //   reject(err.toString());
-    // });
     childProcess.once('exit', (code) => {
       Promise.all([readStream(childProcess.stdout), readStream(childProcess.stderr)])
         .then(([stdout, stderr]) => resolve({ exitCode: code, stdout, stderr }))
