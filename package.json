@@ -49,6 +49,7 @@
     "yargs": "17.1.0"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^13.1.0",
     "@map-colonies/eslint-config": "^2.2.1",
     "@map-colonies/prettier-config": "0.0.1",
     "@types/concat-stream": "^1.6.1",

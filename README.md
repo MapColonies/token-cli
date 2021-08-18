@@ -1,122 +1,37 @@
-# Map Colonies typescript service template
 
-----------------------------------
+# Token-CLI
 
-![badge-alerts-lgtm](https://img.shields.io/lgtm/alerts/github/MapColonies/ts-server-boilerplate?style=for-the-badge)
+This is a simple CLI for interacting with keys and JWT. It lets you create cryptographic key pairs, signing JWT tokens, and verifing them.
 
-![grade-badge-lgtm](https://img.shields.io/lgtm/grade/javascript/github/MapColonies/ts-server-boilerplate?style=for-the-badge)
+For more detailed help please use the `help` command in the CLI.
+```bash
+token-cli help
+```
+## Docker
 
-![snyk](https://img.shields.io/snyk/vulnerabilities/github/MapColonies/ts-server-boilerplate?style=for-the-badge)
-
-----------------------------------
-
-This is a basic repo template for building new MapColonies web services in Typescript.
-
-### Template Features:
-
-- eslint configuration by [@map-colonies/eslint-config](https://github.com/MapColonies/eslint-config)
-
-- prettier configuration by [@map-colonies/prettier-config](https://github.com/MapColonies/prettier-config)
-
-- jest
-
-- .nvmrc
-
-- Multi stage producton-ready Dockerfile
-
-- commitlint
-
-- git hooks
-
-- logging by [@map-colonies/js-logger](https://github.com/MapColonies/js-logger)
-
-- OpenAPI request validation
-
-- config load with [node-config](https://www.npmjs.com/package/node-config)
-
-- Tracing and metrics by [@map-colonies/telemetry](https://github.com/MapColonies/telemetry)
-
-- github templates
-
-- bug report
-
-- feature request
-
-- pull request
-
-- github actions
-
-- on pull_request
-
-- LGTM
-
-- test
-
-- lint
-
-- snyk
-
-## API
-Checkout the OpenAPI spec [here](/openapi3.yaml)
-
-## Installation
-
-Install deps with npm
+It is recommended to use docker to run the cli.
+To build the docker image run the following command
 
 ```bash
-npm install
+  docker build -t token-cli .
 ```
+    
+## Usage
 
-## Run Locally
-
-Clone the project
-
+### creating key pair
 ```bash
-
-git clone https://link-to-project
-
+token-cli generate-key --kid avi -p /tmp
 ```
 
-Go to the project directory
-
+### signing jwt
 ```bash
-
-cd my-project
-
+JWT=$(token-cli generate-token -f  -c aviltd -o http://avi.io)
+echo $JWT
 ```
 
-Install dependencies
-
+### verifing jwt
 ```bash
-
-npm install
-
+token-cli verify -f /tmp/privateKey.jwk -t $(JWT}
 ```
 
-Start the server
-
-```bash
-
-npm run start
-
-```
-
-## Running Tests
-
-To run tests, run the following command
-
-```bash
-
-npm run test
-
-```
-
-To only run unit tests:
-```bash
-npm run test:unit
-```
-
-To only run integration tests:
-```bash
-npm run test:integration
-```
+  

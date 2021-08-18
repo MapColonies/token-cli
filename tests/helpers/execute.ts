@@ -15,23 +15,34 @@ const createProcess = (processPath: string, args: string[] = [], env: Env = unde
   });
 };
 
-export const executeCli = async (
-  args: string[] = [],
-  opts: { env: Env } = { env: undefined }
-): Promise<{ message: string; exitCode: number | null }> => {
+const readStream = async (stream: NodeJS.ReadableStream): Promise<string> => {
+  return new Promise<string>((resolve, reject) => {
+    stream.pipe(
+      concatStream((result) => {
+        resolve(result.toString());
+      }).on('error', reject)
+    );
+  });
+};
+
+interface ExecuteReturn {
+  stdout: string;
+  stderr: string;
+  exitCode: number | null;
+}
+
+export const executeCli = async (args: string[] = [], opts: { env: Env } = { env: undefined }): Promise<ExecuteReturn> => {
   const { env = undefined } = opts;
   const childProcess = createProcess('./src/index.ts', args, env);
   childProcess.stdin.setDefaultEncoding('utf-8');
-  const promise = new Promise<{ message: string; exitCode: number | null }>((resolve, reject) => {
+  const promise = new Promise<ExecuteReturn>((resolve, reject) => {
     // childProcess.stderr.once('data', (err: string) => {
     //   reject(err.toString());
     // });
-    childProcess.once('exit', (code, signal) => {
-      childProcess.stdout.pipe(
-        concatStream((result) => {
-          resolve({ exitCode: code, message: result.toString() });
-        })
-      );
+    childProcess.once('exit', (code) => {
+      Promise.all([readStream(childProcess.stdout), readStream(childProcess.stderr)])
+        .then(([stdout, stderr]) => resolve({ exitCode: code, stdout, stderr }))
+        .catch(reject);
     });
     childProcess.on('error', reject);
   });

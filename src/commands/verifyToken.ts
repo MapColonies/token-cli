@@ -14,13 +14,13 @@ export const describe = 'verify that a token is signed by the provided key, and 
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const builder: yargs.CommandBuilder<{}, VerifyArguments> = (yargs) => {
-  yargs.option('f', { alias: ['public-key-file', 'key-file'], description: 'path to load the public key (in jwk format) from' });
-  yargs.option('token', { alias: 't', description: 'the token to verify' });
+  yargs.option('f', { alias: ['public-key-file', 'key-file'], description: 'path to load the public key (in jwk format) from', demandOption: true });
+  yargs.option('token', { alias: 't', description: 'the token to verify', demandOption: true });
   return yargs as unknown as yargs.Argv<VerifyArguments>;
 };
 
 export const handler = async (argv: VerifyArguments): Promise<void> => {
-  const publicKey = await spinify(readAndParseJWK, { message: 'reading and parsing the public key', timeout: 1500 }, argv.f);
-  const payload = await spinify(verifyToken, { message: 'verifying token', timeout: 1000 }, publicKey, argv.token);
-  console.log(payload);
+  const { key: publicKey, kid } = await spinify(readAndParseJWK, { message: 'reading and parsing the public key', timeout: 1500 }, argv.f);
+  const payload = await spinify(verifyToken, { message: 'verifying token', timeout: 1000 }, publicKey, argv.token, kid);
+  console.log(JSON.stringify(payload));
 };

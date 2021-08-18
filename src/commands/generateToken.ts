@@ -32,9 +32,9 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
 };
 
 export const handler = async (argv: GenerateTokenArguments): Promise<void> => {
-  const privateKey = await spinify(readAndParseJWK, { message: 'reading and parsing the private key', timeout: 2000 }, argv.f);
+  const { key: privateKey, kid } = await spinify(readAndParseJWK, { message: 'reading and parsing the private key', timeout: 2000 }, argv.f);
 
-  const token = await spinify(generateToken, { message: 'generating token', timeout: 2000 }, privateKey, argv.client, argv.o);
+  const token = await spinify(generateToken, { message: 'generating token', timeout: 2000 }, privateKey, argv.client, argv.o, kid);
 
   console.log(token);
 };

@@ -42,12 +42,15 @@ export const generateToken = async (privateKey: KeyLike, client: string, allowed
     .sign(privateKey);
 };
 
-export const verifyToken = async (publicKey: KeyLike, token: string): Promise<JWTPayload> => {
-  const { payload } = await jwtVerify(token, publicKey);
+export const verifyToken = async (publicKey: KeyLike, token: string, kid?: string): Promise<JWTPayload> => {
+  const { payload, protectedHeader } = await jwtVerify(token, publicKey);
+  if (protectedHeader.kid !== kid) {
+    throw new Error("kid doesn't match");
+  }
   return payload;
 };
 
-export const readAndParseJWK = async (filePath: string): Promise<KeyLike> => {
+export const readAndParseJWK = async (filePath: string): Promise<{ key: KeyLike; kid: string | undefined }> => {
   const fileContent = await readFile(filePath, 'utf-8');
 
   const jwk = jwkStringParser(fileContent);
@@ -60,5 +63,5 @@ export const readAndParseJWK = async (filePath: string): Promise<KeyLike> => {
     throw new Error('key algorithm is not supported');
   }
 
-  return parseJwk(jwk);
+  return { key: await parseJwk(jwk), kid: jwk.kid };
 };
