@@ -6,6 +6,7 @@ import * as verifyToken from './commands/verifyToken';
 const argsIndex = 2;
 
 void yargs(process.argv.slice(argsIndex))
+  .option('progress', { boolean: true, default: true, description: 'show progress of running commands' })
   .command<generateKey.GenerateKeyArguments>(generateKey)
   .command(signToken)
   .command(verifyToken)

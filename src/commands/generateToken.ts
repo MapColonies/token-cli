@@ -1,4 +1,5 @@
 import yargs from 'yargs';
+import { DEFAULT_SPIN_TIMEOUT } from '../constants';
 import { generateToken, readAndParseJWK } from '../crypto';
 import { spinify } from '../util';
 
@@ -8,6 +9,7 @@ export interface GenerateTokenArguments {
   c: string;
   client: string;
   o: string[] | undefined;
+  progress: boolean;
 }
 
 export const command = 'generate-token';
@@ -32,9 +34,20 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
 };
 
 export const handler = async (argv: GenerateTokenArguments): Promise<void> => {
-  const { key: privateKey, kid } = await spinify(readAndParseJWK, { message: 'reading and parsing the private key', timeout: 2000 }, argv.f);
+  const { key: privateKey, kid } = await spinify(
+    readAndParseJWK,
+    { message: 'reading and parsing the private key', isEnabled: argv.progress, timeout: DEFAULT_SPIN_TIMEOUT },
+    argv.f
+  );
 
-  const token = await spinify(generateToken, { message: 'generating token', timeout: 2000 }, privateKey, argv.client, argv.o, kid);
+  const token = await spinify(
+    generateToken,
+    { message: 'generating token', isEnabled: argv.progress, timeout: DEFAULT_SPIN_TIMEOUT },
+    privateKey,
+    argv.client,
+    argv.o,
+    kid
+  );
 
-  console.log(token);
+  process.stdout.write(token);
 };

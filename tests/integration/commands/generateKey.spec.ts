@@ -1,58 +1,47 @@
-// import { parseJwk } from 'jose/jwk/parse'
 import { EOL } from 'os';
 import { readFile } from 'fs/promises';
+import path from 'path';
 import { executeCli } from '../../helpers/execute';
+import { FILE_STORAGE_DIR, KID } from '../../testConstants';
 
 describe('generate-key', function () {
   describe('Happy Path', function () {
     it('should return a key pair in jwk format to stdout', async function () {
-      const kid = 'avi';
-      const { exitCode, stdout } = await executeCli(['generate-key', '-s', '-i', kid]);
+      const { exitCode, stdout } = await executeCli(['generate-key', '-s', '-i', KID]);
 
       expect(exitCode).toEqual(0);
 
       const { privateKey, publicKey } = JSON.parse(stdout) as { publicKey: Record<string, unknown>; privateKey: Record<string, unknown> };
-      expect(privateKey).toMatchObject({ kid, alg: 'RSA256' });
-      expect(publicKey).toMatchObject({ kid, alg: 'RSA256' });
-
-      // await expect(parseJwk(privateKey)).resolves.not.toThrow();
-      // await expect(parseJwk(publicKey)).resolves.not.toThrow();
+      expect(privateKey).toMatchObject({ kid: KID, alg: 'RSA256' });
+      expect(publicKey).toMatchObject({ kid: KID, alg: 'RSA256' });
     });
 
     it('should return a key pair in jwk format to a file', async function () {
-      const kid = 'avi';
-      const { exitCode, stdout } = await executeCli(['generate-key', '-i', kid, '-p', '/tmp/token-cli-test-workdir']);
+      const { exitCode, stdout } = await executeCli(['generate-key', '-i', KID, '-p', FILE_STORAGE_DIR]);
 
       expect(exitCode).toEqual(0);
       expect(stdout).toEqual('');
 
-      const privateKey = JSON.parse((await readFile('/tmp/token-cli-test-workdir/privateKey.jwk')).toString()) as unknown;
-      const publicKey = JSON.parse((await readFile('/tmp/token-cli-test-workdir/publicKey.jwk')).toString()) as unknown;
-      expect(privateKey).toMatchObject({ kid, alg: 'RSA256' });
-      expect(publicKey).toMatchObject({ kid, alg: 'RSA256' });
-
-      // await expect(parseJwk(privateKey)).resolves.not.toThrow();
-      // await expect(parseJwk(publicKey)).resolves.not.toThrow();
+      const privateKey = JSON.parse((await readFile(path.join(FILE_STORAGE_DIR, 'privateKey.jwk'))).toString()) as unknown;
+      const publicKey = JSON.parse((await readFile(path.join(FILE_STORAGE_DIR, 'publicKey.jwk'))).toString()) as unknown;
+      expect(privateKey).toMatchObject({ kid: KID, alg: 'RSA256' });
+      expect(publicKey).toMatchObject({ kid: KID, alg: 'RSA256' });
     });
 
     it('should output to stdout by default', async function () {
-      const kid = 'avi';
-      const { exitCode, stdout } = await executeCli(['generate-key', '-i', kid]);
+      const { exitCode, stdout } = await executeCli(['generate-key', '-i', KID]);
 
       expect(exitCode).toEqual(0);
 
       const { privateKey, publicKey } = JSON.parse(stdout) as { publicKey: Record<string, unknown>; privateKey: Record<string, unknown> };
-      expect(privateKey).toMatchObject({ kid, alg: 'RSA256' });
-      expect(publicKey).toMatchObject({ kid, alg: 'RSA256' });
-
-      // await expect(parseJwk(privateKey)).resolves.not.toThrow();
-      // await expect(parseJwk(publicKey)).resolves.not.toThrow();
+      expect(privateKey).toMatchObject({ kid: KID, alg: 'RSA256' });
+      expect(publicKey).toMatchObject({ kid: KID, alg: 'RSA256' });
     });
   });
+
   describe('Bad Path', function () {
     it("shouldn't be possible to both output to stdout and file", async function () {
-      const kid = 'avi';
-      const { exitCode, stderr } = await executeCli(['generate-key', '-s', '-i', kid, '-p', '/tmp/token-cli-test-workdir']);
+      const { exitCode, stderr } = await executeCli(['generate-key', '-s', '-i', KID, '-p', FILE_STORAGE_DIR]);
       expect(exitCode).not.toEqual(0);
       const stdErrLines = stderr.split(EOL);
       expect(stdErrLines[stdErrLines.length - 2]).toEqual('Arguments p and s are mutually exclusive');
@@ -67,8 +56,7 @@ describe('generate-key', function () {
     });
 
     it("should exit with error code if file path doesn't exists", async function () {
-      const kid = 'avi';
-      const { exitCode, stderr } = await executeCli(['generate-key', '-i', kid, '-p', '/fsdasdasgxd']);
+      const { exitCode, stderr } = await executeCli(['generate-key', '-i', KID, '-p', '/fsdasdasgxd']);
       expect(exitCode).not.toEqual(0);
       const stdErrLines = stderr.split(EOL);
       expect(stdErrLines[stdErrLines.length - 2]).toEqual('the path to the files is not valid');

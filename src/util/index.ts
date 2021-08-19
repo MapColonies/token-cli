@@ -1,15 +1,13 @@
 import { setTimeout as asyncSetTimeout } from 'timers/promises';
 import ora from 'ora';
 
-export const isTesting = process.env.NODE_ENV === 'test';
-
 export const spinify = async <R, A extends unknown[], F extends (...args: A) => Promise<R>>(
   func: F,
-  options: { message: string; timeout?: number },
+  options: { message: string; isEnabled: boolean; timeout?: number },
   ...args: A
 ): Promise<ReturnType<F>> => {
   let spinner: ora.Ora | undefined = undefined;
-  if (!isTesting) {
+  if (options.isEnabled) {
     spinner = ora(options.message).start();
 
     if (options.timeout !== undefined) {

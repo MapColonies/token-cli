@@ -2,7 +2,7 @@
   "name": "token-cli",
   "version": "1.0.0",
   "description": "This a cli for creating and interacting with keys and JWT tokens",
-  "main": "./index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "test:integration": "jest --config=./tests/configurations/integration/jest.config.js",
     "format": "prettier --check .",
@@ -36,7 +36,7 @@
     }
   },
   "bin": {
-    "token-cli": "./index.js"
+    "token-cli": "./dist/index.js"
   },
   "engines": {
     "node": ">=16"
@@ -54,6 +54,7 @@
     "@map-colonies/prettier-config": "0.0.1",
     "@types/concat-stream": "^1.6.1",
     "@types/jest": "^26.0.19",
+    "@types/rimraf": "^3.0.2",
     "@types/yargs": "^17.0.2",
     "commitlint": "^9.1.2",
     "concat-stream": "^2.0.0",

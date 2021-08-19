@@ -1,0 +1,23 @@
+import { KID } from './testConstants';
+
+export const PRIVATE_KEY = {
+  kty: 'RSA',
+  n: 'yjpwlTamiqnawBpT_cE3cDaP-y5PH7CWpIMsqm3M5DS4WY4vf0JtR2YFRrRrWFq8fc4lZ4JdxGHyRUJcmp8tPuMGWEOJ-_LLOY50ng0iNWTzwj8JiZooDnCt1vDhCBh1qk2aUTfTTawXGQOQ32aKTWU8tOh2TDQgAzGksIIvV-1Igv1dmsJqN1vv3Ym1ExTq0x0zfoNPgxsxIrCfLMhxL5tw-nN5JSRv8Fy4vdc3cYwpMi8Igoh_5wJX5KEAgp-0LvEZTX_PROfMlSFOD_wnPPqiq3LjV8U6wgf3DjcsN-XOf6-VQDz2OD9O1_qkm6oTWSD94aPgcDJzqjPAG5JoLw',
+  e: 'AQAB',
+  d: 'pM07Ml53GkmRmzvZdtIe-7N7Ypc6o_ikyyybGcihUNgl49Wbn3ni1GyvoA8n67kGIv_8O35iK8gmR4rtLJTLqpQYd5WSvV__fcg6ARNy7VB31bTJcPnP6vSotqFWweItAbx8JfP4nzO_HwNo7KYDz07RShynSzKvY-rw62csbdndJgdcf7eEWV5aIP_S2f6v86cZO7Lr9OQeOg1XUKN1kkKSl7DGy8l3Rr3bCCY9KTsrzI5hDVc1FgIP1WPJ7o6MpZ6A65KdlgyLMZ-g9OF8HLCwxmzRtJqOcVlGkgRLK8mPfHXNMmk-dAxsJ2awA7K4FrfjHwsQcLBL54moem8jAQ',
+  p: '9_CcB3B-26gyIRIxsnulTGQ4uWv7jrS0tEUJHRUL47hoAhlmzG4KQ1aK9K-qsgW7G2ovAeeCfxIgM1KKGcKXFjYzwt3fToZm-SzmcNbs6iTUCwF7ZcJvbBUPAI5hmP6uVg-XfgBapf0lfbEoS_3eyE1iLrCKl6UP_THQcCHtlos',
+  q: '0M1pdDHWU7tTSCAKm9phnPb89OuqYauBPRD7oijw08PuYvFKzY5gkDk9IISUzDYD4H7c_R2-qt9bIsVhJKE9QE9ZTJIyyd4NUhy2Z1MfkcWRb_rP9HM5keDHnI-7-SXKb6qCL-e7u50P2JKPqirlPEaRlxike-QiBNnWbY8UzW0',
+  dp: 'R9Pyv8z9U1FUxHPq5dQgPRNDw6PeyqbbOuZND5nLSftgVktZlpvCaWOm-d_ySYSTgguu9pRFH972aSfeTjwrXQny0N9KFAunxUQWtlXtaJ-mtlGFmCNN-DfZksWszI_rnY8CykP7_t5pgBJUpD81zT1t1iza2be9_BH0WqfZlqU',
+  dq: 'VT7Hgsyl9-FOiu-p5R8vIuojM8rS8LUYOloooXedepdPR83DAFDUU41Ky2_VX9ndk1W32w69vP0bNALpOg8p9otupbg6S_f_8DoQrfZduSGz0sfPBrnUEx514BE-aOVo1FYEeJJfLqVcxspvJMYGeKlG3y0MWhg1W02kIW58y7E',
+  qi: 'REh8BI-gbD_BdD2789xEoibKXjTTlSbPuf2PX9dBKsBgL7z4qlWegmLXx9uuaPHKagrbfcHvNkM2wx4telIc5nmWdvZITetxfxB2ICtbhwsOk0LIXHo26f_AvdTleicRGL0lbYc7wv71bBF4q34ro_KOOdKfophSjzElskeMiUQ',
+  alg: 'RSA256',
+  kid: KID,
+};
+
+export const PUBLIC_KEY = {
+  kty: 'RSA',
+  n: 'yjpwlTamiqnawBpT_cE3cDaP-y5PH7CWpIMsqm3M5DS4WY4vf0JtR2YFRrRrWFq8fc4lZ4JdxGHyRUJcmp8tPuMGWEOJ-_LLOY50ng0iNWTzwj8JiZooDnCt1vDhCBh1qk2aUTfTTawXGQOQ32aKTWU8tOh2TDQgAzGksIIvV-1Igv1dmsJqN1vv3Ym1ExTq0x0zfoNPgxsxIrCfLMhxL5tw-nN5JSRv8Fy4vdc3cYwpMi8Igoh_5wJX5KEAgp-0LvEZTX_PROfMlSFOD_wnPPqiq3LjV8U6wgf3DjcsN-XOf6-VQDz2OD9O1_qkm6oTWSD94aPgcDJzqjPAG5JoLw',
+  e: 'AQAB',
+  alg: 'RSA256',
+  kid: KID,
+};

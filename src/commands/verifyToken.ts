@@ -1,4 +1,5 @@
 import yargs from 'yargs';
+import { DEFAULT_SPIN_TIMEOUT } from '../constants';
 import { readAndParseJWK, verifyToken } from '../crypto';
 import { spinify } from '../util';
 
@@ -6,6 +7,7 @@ export interface VerifyArguments {
   [x: string]: unknown;
   f: string;
   token: string;
+  progress: boolean;
 }
 
 export const command = 'verify';
@@ -20,7 +22,17 @@ export const builder: yargs.CommandBuilder<{}, VerifyArguments> = (yargs) => {
 };
 
 export const handler = async (argv: VerifyArguments): Promise<void> => {
-  const { key: publicKey, kid } = await spinify(readAndParseJWK, { message: 'reading and parsing the public key', timeout: 1500 }, argv.f);
-  const payload = await spinify(verifyToken, { message: 'verifying token', timeout: 1000 }, publicKey, argv.token, kid);
-  console.log(JSON.stringify(payload));
+  const { key: publicKey, kid } = await spinify(
+    readAndParseJWK,
+    { message: 'reading and parsing the public key', isEnabled: argv.progress, timeout: DEFAULT_SPIN_TIMEOUT },
+    argv.f
+  );
+  const payload = await spinify(
+    verifyToken,
+    { message: 'verifying token', isEnabled: argv.progress, timeout: DEFAULT_SPIN_TIMEOUT },
+    publicKey,
+    argv.token,
+    kid
+  );
+  process.stdout.write(JSON.stringify(payload));
 };

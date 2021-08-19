@@ -5,12 +5,14 @@ import yargs from 'yargs';
 import chalk from 'chalk';
 import { spinify } from '../util';
 import { generateKeyPair } from '../crypto';
+import { DEFAULT_SPIN_TIMEOUT, PRIVATE_KEY_FILE_NAME, PUBLIC_KEY_FILE_NAME } from '../constants';
 
 export interface GenerateKeyArguments {
   [x: string]: unknown;
   kid: string;
   s: boolean | undefined;
   p: string | undefined;
+  progress: boolean;
 }
 
 export const command = 'generate-key';
@@ -34,23 +36,27 @@ export const builder: yargs.CommandBuilder<{}, GenerateKeyArguments> = (yargs) =
 };
 
 export const handler = async (argv: GenerateKeyArguments): Promise<void> => {
-  const { privateKey, publicKey } = await spinify(generateKeyPair, { message: 'generating key', timeout: 2000 }, argv.kid);
+  const { privateKey, publicKey } = await spinify(
+    generateKeyPair,
+    { message: 'generating key', isEnabled: argv.progress, timeout: DEFAULT_SPIN_TIMEOUT },
+    argv.kid
+  );
 
   const path = argv.p;
   if (path !== undefined) {
     try {
       await spinify(
         async () => {
-          await writeFile(join(path, 'publicKey.jwk'), JSON.stringify(publicKey), { encoding: 'utf-8' });
-          await writeFile(join(path, 'privateKey.jwk'), JSON.stringify(privateKey), { encoding: 'utf-8' });
+          await writeFile(join(path, PUBLIC_KEY_FILE_NAME), JSON.stringify(publicKey), { encoding: 'utf-8' });
+          await writeFile(join(path, PRIVATE_KEY_FILE_NAME), JSON.stringify(privateKey), { encoding: 'utf-8' });
         },
-        { message: 'saving files', timeout: 2000 }
+        { message: 'saving files', isEnabled: argv.progress, timeout: DEFAULT_SPIN_TIMEOUT }
       );
     } catch (error) {
       console.error(chalk.red('could not save files'));
       process.exit(1);
     }
   } else {
-    console.log(JSON.stringify({ publicKey: publicKey, privateKey: privateKey }));
+    process.stdout.write(JSON.stringify({ publicKey: publicKey, privateKey: privateKey }));
   }
 };

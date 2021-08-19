@@ -33,7 +33,7 @@ interface ExecuteReturn {
 
 export const executeCli = async (args: string[] = [], opts: { env: Env } = { env: undefined }): Promise<ExecuteReturn> => {
   const { env = undefined } = opts;
-  const childProcess = createProcess('./src/index.ts', args, env);
+  const childProcess = createProcess('./src/index.ts', ['--progress=false', ...args], env);
   childProcess.stdin.setDefaultEncoding('utf-8');
   const promise = new Promise<ExecuteReturn>((resolve, reject) => {
     childProcess.once('exit', (code) => {
