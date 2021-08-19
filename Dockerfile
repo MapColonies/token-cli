@@ -8,7 +8,7 @@ COPY ./package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
-RUN npx pkg -t node16-alpine ./dist/package.json
+RUN npx pkg -t node16-alpine ./package.json
 
 FROM alpine:3.14
 
