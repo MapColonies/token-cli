@@ -73,9 +73,10 @@ describe('verify', function () {
     });
 
     it('should exit if private key is not valid', async function () {
-      await writeFile('/tmp/avi/badKey.jwk', JSON.stringify({ avi: 'avi' }), { encoding: 'utf-8' });
+      const badKeyPath = path.join(FILE_STORAGE_DIR, 'badKey.jwk');
+      await writeFile(badKeyPath, JSON.stringify({ avi: 'avi' }), { encoding: 'utf-8' });
 
-      const { exitCode, stderr } = await executeCli(['verify', '-t', token, '-f', '/tmp/avi/badKey.jwk']);
+      const { exitCode, stderr } = await executeCli(['verify', '-t', token, '-f', badKeyPath]);
       expect(exitCode).not.toEqual(0);
 
       expect(stderr).toMatch("Couldn't parse the content of the file into a valid jwk object");
