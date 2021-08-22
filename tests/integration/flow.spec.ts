@@ -7,7 +7,6 @@ const flowWorkWorkdir = path.join(FILE_STORAGE_DIR, 'flow');
 const flowPublicKeyPath = path.join(flowWorkWorkdir, 'publicKey.jwk');
 const flowPrivateKeyPath = path.join(flowWorkWorkdir, 'privateKey.jwk');
 
-jest.setTimeout(20000);
 describe('flow', function () {
   beforeAll(function () {
     if (!fs.existsSync(flowWorkWorkdir)) {
@@ -36,5 +35,5 @@ describe('flow', function () {
 
     expect(exitCode).toEqual(0);
     expect(JSON.parse(stdout)).toMatchObject({ ao: ['https://localhost:8080'], sub: 'avi', iss: 'mapcolonies-token-cli' });
-  });
+  }, 20000);
 });
