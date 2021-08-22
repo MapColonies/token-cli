@@ -8,12 +8,13 @@ module.exports = {
   coverageDirectory: '<rootDir>/coverage',
   rootDir: '../../../.',
   testMatch: ['<rootDir>/tests/integration/**/*.spec.ts'],
-  setupFiles: ['<rootDir>/tests/configurations/jest.setup.js'],
+  globalSetup: '<rootDir>/tests/configurations/jest.setup.ts',
+  globalTeardown: '<rootDir>/tests/configurations/jest.teardown.ts',
   reporters: [
     'default',
     [
       'jest-html-reporters',
-      { multipleReportsUnitePath: './report', pageTitle: 'integration', publicPath: './reports', filename: 'integration.html' },
+      { multipleReportsUnitePath: './reports', pageTitle: 'integration', publicPath: './reports', filename: 'integration.html' },
     ],
   ],
   collectCoverage: true,
