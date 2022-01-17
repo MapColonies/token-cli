@@ -3,6 +3,7 @@ import * as generateKey from './commands/generateKey';
 import * as signToken from './commands/generateToken';
 import * as verifyToken from './commands/verifyToken';
 import * as convertKey from './commands/convertKey';
+
 const argsIndex = 2;
 
 void yargs(process.argv.slice(argsIndex))

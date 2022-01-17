@@ -6,9 +6,9 @@ import { jwtVerify } from 'jose/jwt/verify';
 import { JWK, KeyLike } from 'jose/webcrypto/types';
 import Ajv from 'ajv/dist/jtd';
 import { parseJwk } from 'jose/jwk/parse';
+import jwkToPem from 'jwk-to-pem';
 import { ISSUER } from './constants';
 import { jwkSchema } from './schemas/jwk';
-import jwkToPem from 'jwk-to-pem';
 
 const SUPPORTED_ALGORITHEMS = ['RSA256'];
 
