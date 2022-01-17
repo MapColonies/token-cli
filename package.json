@@ -55,6 +55,7 @@
     "@map-colonies/prettier-config": "0.0.1",
     "@types/concat-stream": "^1.6.1",
     "@types/jest": "^26.0.19",
+    "@types/jwk-to-pem": "^2.0.1",
     "@types/rimraf": "^3.0.2",
     "@types/yargs": "^17.0.2",
     "commitlint": "^9.1.2",

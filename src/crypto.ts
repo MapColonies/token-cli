@@ -8,6 +8,7 @@ import Ajv from 'ajv/dist/jtd';
 import { parseJwk } from 'jose/jwk/parse';
 import { ISSUER } from './constants';
 import { jwkSchema } from './schemas/jwk';
+import jwkToPem from 'jwk-to-pem';
 
 const SUPPORTED_ALGORITHEMS = ['RSA256'];
 
@@ -48,6 +49,16 @@ export const verifyToken = async (publicKey: KeyLike, token: string, kid?: strin
     throw new Error("kid doesn't match");
   }
   return payload;
+};
+
+export const convertJwkToPEM = async (filePath: string): Promise<string> => {
+  const jwkString = await readFile(filePath, 'utf8');
+  const jwk = jwkStringParser(jwkString);
+  if (jwk === undefined) {
+    throw new Error('Invalid JWK');
+  }
+  const pem = jwkToPem(jwk as jwkToPem.JWK);
+  return pem;
 };
 
 export const readAndParseJWK = async (filePath: string): Promise<{ key: KeyLike; kid: string | undefined }> => {

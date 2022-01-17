@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import yargs from 'yargs';
 import { spinify } from '../util';
-import { readAndParseJWK, verifyToken } from '../crypto';
+import { readAndParseJWK, verifyToken, convertJwkToPEM } from '../crypto';
 import jwkToPem from 'jwk-to-pem';
 import { DEFAULT_SPIN_TIMEOUT } from '../constants';
 
@@ -21,11 +20,6 @@ export const builder: yargs.CommandBuilder<{}, VerifyArguments> = (yargs) => {
 };
 
 export const handler = async (argv: VerifyArguments): Promise<void> => {
-  const { key: publicKey, kid } = await spinify(
-    readAndParseJWK,
-    { message: 'reading and parsing the public key', isEnabled: argv.progress, timeout: DEFAULT_SPIN_TIMEOUT },
-    argv.f
-  );
-  const payload = await spinify(jwkToPem, { message: 'converting', isEnabled: argv.progress, timeout: DEFAULT_SPIN_TIMEOUT }, publicKey, argv.p, kid);
-  process.stdout.write(JSON.stringify(payload));
+  const pem = await spinify(convertJwkToPEM, { message: 'converting JWK to PEM', isEnabled: argv.progress, timeout: DEFAULT_SPIN_TIMEOUT }, argv.f);
+  process.stdout.write(pem);
 };
