@@ -10,6 +10,7 @@ export interface GenerateTokenArguments {
   client: string;
   o: string[] | undefined;
   progress: boolean;
+  d: string[] | undefined;
 }
 
 export const command = 'generate-token';
@@ -30,6 +31,12 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
     array: true,
     description: 'the domains that the client will be allowed to make requests from',
   });
+  yargs.option('d', {
+    alias: 'additional-data',
+    type: 'array',
+    array: true,
+    description: 'additional data to add to token. must be in format: "<key>=<value>"',
+  });
   return yargs as yargs.Argv<GenerateTokenArguments>;
 };
 
@@ -46,7 +53,8 @@ export const handler = async (argv: GenerateTokenArguments): Promise<void> => {
     privateKey,
     argv.client,
     argv.o,
-    kid
+    kid,
+    argv.d
   );
 
   process.stdout.write(token);
