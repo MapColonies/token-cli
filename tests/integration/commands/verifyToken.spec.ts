@@ -1,9 +1,10 @@
 import { writeFile } from 'fs/promises';
-import { EOL } from 'os';
 import path from 'path';
 import { executeCli } from '../../helpers/execute';
 import { PRIVATE_KEY, PUBLIC_KEY } from '../../keys';
 import { CLIENT_NAME, FILE_STORAGE_DIR } from '../../testConstants';
+
+const EOL = '\n';
 
 const publicKeyPath = path.join(FILE_STORAGE_DIR, 'verifyPublicKeyAvi.jwk');
 const badPublicKeyPath = path.join(FILE_STORAGE_DIR, 'verifyPublicKeyNot.jwk');
