@@ -27,6 +27,8 @@ describe('flow', function () {
       CLIENT_NAME,
       '-o',
       'https://localhost:8080',
+      '-t',
+      'raster',
     ]);
 
     expect(genTokenExitCode).toEqual(0);
@@ -34,6 +36,6 @@ describe('flow', function () {
     const { exitCode, stdout } = await executeCli(['verify', '-t', token, '-f', flowPublicKeyPath]);
 
     expect(exitCode).toEqual(0);
-    expect(JSON.parse(stdout)).toMatchObject({ ao: ['https://localhost:8080'], sub: 'avi', iss: 'mapcolonies-token-cli' });
-  }, 20000);
+    expect(JSON.parse(stdout)).toMatchObject({ ao: ['https://localhost:8080'], rt: ['raster'], sub: 'avi', iss: 'mapcolonies-token-cli' });
+  });
 });

@@ -9,6 +9,7 @@ export interface GenerateTokenArguments {
   c: string;
   client: string;
   o: string[] | undefined;
+  t: string[] | undefined;
   progress: boolean;
   d: string[] | undefined;
 }
@@ -37,6 +38,7 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
     array: true,
     description: 'additional data to add to token. must be in format: "<key>=<value>"',
   });
+  yargs.option('t', { alias: 'resource-types', type: 'array', array: true, description: 'the product types the client will be allowed to access' });
   return yargs as yargs.Argv<GenerateTokenArguments>;
 };
 
@@ -53,6 +55,7 @@ export const handler = async (argv: GenerateTokenArguments): Promise<void> => {
     privateKey,
     argv.client,
     argv.o,
+    argv.t,
     kid,
     argv.d
   );

@@ -10,7 +10,7 @@ export const PRIVATE_KEY = {
   dp: 'R9Pyv8z9U1FUxHPq5dQgPRNDw6PeyqbbOuZND5nLSftgVktZlpvCaWOm-d_ySYSTgguu9pRFH972aSfeTjwrXQny0N9KFAunxUQWtlXtaJ-mtlGFmCNN-DfZksWszI_rnY8CykP7_t5pgBJUpD81zT1t1iza2be9_BH0WqfZlqU',
   dq: 'VT7Hgsyl9-FOiu-p5R8vIuojM8rS8LUYOloooXedepdPR83DAFDUU41Ky2_VX9ndk1W32w69vP0bNALpOg8p9otupbg6S_f_8DoQrfZduSGz0sfPBrnUEx514BE-aOVo1FYEeJJfLqVcxspvJMYGeKlG3y0MWhg1W02kIW58y7E',
   qi: 'REh8BI-gbD_BdD2789xEoibKXjTTlSbPuf2PX9dBKsBgL7z4qlWegmLXx9uuaPHKagrbfcHvNkM2wx4telIc5nmWdvZITetxfxB2ICtbhwsOk0LIXHo26f_AvdTleicRGL0lbYc7wv71bBF4q34ro_KOOdKfophSjzElskeMiUQ',
-  alg: 'RSA256',
+  alg: 'RS256',
   kid: KID,
 };
 
@@ -18,6 +18,6 @@ export const PUBLIC_KEY = {
   kty: 'RSA',
   n: 'yjpwlTamiqnawBpT_cE3cDaP-y5PH7CWpIMsqm3M5DS4WY4vf0JtR2YFRrRrWFq8fc4lZ4JdxGHyRUJcmp8tPuMGWEOJ-_LLOY50ng0iNWTzwj8JiZooDnCt1vDhCBh1qk2aUTfTTawXGQOQ32aKTWU8tOh2TDQgAzGksIIvV-1Igv1dmsJqN1vv3Ym1ExTq0x0zfoNPgxsxIrCfLMhxL5tw-nN5JSRv8Fy4vdc3cYwpMi8Igoh_5wJX5KEAgp-0LvEZTX_PROfMlSFOD_wnPPqiq3LjV8U6wgf3DjcsN-XOf6-VQDz2OD9O1_qkm6oTWSD94aPgcDJzqjPAG5JoLw',
   e: 'AQAB',
-  alg: 'RSA256',
+  alg: 'RS256',
   kid: KID,
 };

@@ -1,9 +1,10 @@
 import { writeFile } from 'fs/promises';
-import { EOL } from 'os';
 import path from 'path';
 import { executeCli } from '../../helpers/execute';
 import { PRIVATE_KEY, PUBLIC_KEY } from '../../keys';
 import { CLIENT_NAME, FILE_STORAGE_DIR } from '../../testConstants';
+
+const EOL = '\n';
 
 const publicKeyPath = path.join(FILE_STORAGE_DIR, 'verifyPublicKeyAvi.jwk');
 const badPublicKeyPath = path.join(FILE_STORAGE_DIR, 'verifyPublicKeyNot.jwk');
@@ -15,7 +16,17 @@ describe('verify', function () {
     await writeFile(privateTokenPath, JSON.stringify(PRIVATE_KEY), { encoding: 'utf-8' });
     await writeFile(publicKeyPath, JSON.stringify(PUBLIC_KEY), { encoding: 'utf-8' });
     await writeFile(badPublicKeyPath, JSON.stringify({ ...PUBLIC_KEY, kid: 'not' }), { encoding: 'utf-8' });
-    const { exitCode, stdout } = await executeCli(['generate-token', '-f', privateTokenPath, '-c', CLIENT_NAME, '-o', 'https://localhost:8080']);
+    const { exitCode, stdout } = await executeCli([
+      'generate-token',
+      '-f',
+      privateTokenPath,
+      '-c',
+      CLIENT_NAME,
+      '-o',
+      'https://localhost:8080',
+      '-t',
+      'raster',
+    ]);
     if (exitCode === null || exitCode > 0) {
       throw new Error('failed creating token');
     }

@@ -1,8 +1,9 @@
-import { EOL } from 'os';
 import { readFile } from 'fs/promises';
 import path from 'path';
 import { executeCli } from '../../helpers/execute';
 import { FILE_STORAGE_DIR, KID } from '../../testConstants';
+
+const EOL = '\n';
 
 describe('generate-key', function () {
   describe('Happy Path', function () {
@@ -12,8 +13,8 @@ describe('generate-key', function () {
       expect(exitCode).toEqual(0);
 
       const { privateKey, publicKey } = JSON.parse(stdout) as { publicKey: Record<string, unknown>; privateKey: Record<string, unknown> };
-      expect(privateKey).toMatchObject({ kid: KID, alg: 'RSA256' });
-      expect(publicKey).toMatchObject({ kid: KID, alg: 'RSA256' });
+      expect(privateKey).toMatchObject({ kid: KID, alg: 'RS256' });
+      expect(publicKey).toMatchObject({ kid: KID, alg: 'RS256' });
     });
 
     it('should return a key pair in jwk format to a file', async function () {
@@ -24,8 +25,8 @@ describe('generate-key', function () {
 
       const privateKey = JSON.parse((await readFile(path.join(FILE_STORAGE_DIR, 'privateKey.jwk'))).toString()) as unknown;
       const publicKey = JSON.parse((await readFile(path.join(FILE_STORAGE_DIR, 'publicKey.jwk'))).toString()) as unknown;
-      expect(privateKey).toMatchObject({ kid: KID, alg: 'RSA256' });
-      expect(publicKey).toMatchObject({ kid: KID, alg: 'RSA256' });
+      expect(privateKey).toMatchObject({ kid: KID, alg: 'RS256' });
+      expect(publicKey).toMatchObject({ kid: KID, alg: 'RS256' });
     });
 
     it('should output to stdout by default', async function () {
@@ -34,8 +35,8 @@ describe('generate-key', function () {
       expect(exitCode).toEqual(0);
 
       const { privateKey, publicKey } = JSON.parse(stdout) as { publicKey: Record<string, unknown>; privateKey: Record<string, unknown> };
-      expect(privateKey).toMatchObject({ kid: KID, alg: 'RSA256' });
-      expect(publicKey).toMatchObject({ kid: KID, alg: 'RSA256' });
+      expect(privateKey).toMatchObject({ kid: KID, alg: 'RS256' });
+      expect(publicKey).toMatchObject({ kid: KID, alg: 'RS256' });
     });
   });
 
