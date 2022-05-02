@@ -10,7 +10,7 @@ import jwkToPem from 'jwk-to-pem';
 import { ISSUER } from './constants';
 import { jwkSchema } from './schemas/jwk';
 
-const SUPPORTED_ALGORITHEMS = ['RSA256'];
+const SUPPORTED_ALGORITHEMS = ['RS256'];
 
 const generateKeyPairAsync = promisify(generateKeyPairCB);
 
