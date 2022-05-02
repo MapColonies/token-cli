@@ -61,11 +61,21 @@ export const executeCli = async (args: string[] = [], opts: { env: Env } = { env
       }
     });
     childProcess.once('exit', (code) => {
-      stderrPromise.then(() => {
-        stdoutPromise.then(() => {
-          resolve({ exitCode: code, stdout, stderr });
-        });
-      });
+      stderrPromise
+        .catch(() => {
+          throw new Error('read stderr Stream failed');
+        })
+        .then(() => {
+          stdoutPromise
+            .catch(() => {
+              throw new Error('read stdout Stream failed');
+            })
+            .then(() => {
+              resolve({ exitCode: code, stdout, stderr });
+            })
+            .catch(() => 'obligatory catch');
+        })
+        .catch(() => 'obligatory catch');
     });
     childProcess.on('error', reject);
   });
