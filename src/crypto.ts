@@ -29,7 +29,7 @@ export interface KeyPair {
 export const generateKeyPair = async (kid?: string): Promise<KeyPair> => {
   const { privateKey, publicKey } = await generateKeyPairAsync('rsa', { modulusLength: 2048, publicExponent: 0x10001 });
   const jwkPair = { privateKey: exportJwk(privateKey), publicKey: exportJwk(publicKey) };
-  jwkPair.privateKey.alg = jwkPair.publicKey.alg = 'RSA256';
+  jwkPair.privateKey.alg = jwkPair.publicKey.alg = 'RS256';
   jwkPair.privateKey.kid = jwkPair.publicKey.kid = kid;
   return jwkPair;
 };

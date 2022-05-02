@@ -46,20 +46,8 @@ export const executeCli = async (args: string[] = [], opts: { env: Env } = { env
     const childProcess = createProcess('./src/index.ts', ['--progress=false', ...args], env);
     childProcess.stdin.setDefaultEncoding('utf-8');
     let stdout!: string, stderr!: string;
-    const stdoutPromise = readStream(childProcess.stdout).then((value) => {
-      if (value) {
-        stdout = value;
-      } else {
-        stdout = '';
-      }
-    });
-    const stderrPromise = readStream(childProcess.stderr).then((value) => {
-      if (value) {
-        stderr = value;
-      } else {
-        stderr = '';
-      }
-    });
+    const stdoutPromise = readStream(childProcess.stdout).then((value) => (stdout = value ?? ''));
+    const stderrPromise = readStream(childProcess.stderr).then((value) => (stderr = value ?? ''));
     childProcess.once('exit', (code) => {
       stderrPromise
         .catch(() => {

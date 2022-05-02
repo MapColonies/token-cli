@@ -19,18 +19,14 @@ describe('flow', function () {
 
     expect(genKeyExitCode).toEqual(0);
 
-    const { exitCode: genTokenExitCode, stdout: token } = await executeCli([
-      'generate-token',
-      '-f',
-      flowPrivateKeyPath,
-      '-c',
-      CLIENT_NAME,
-      '-o',
-      'https://localhost:8080',
-      '-t',
-      'raster',
-    ]);
+    const {
+      exitCode: genTokenExitCode,
+      stdout: token,
+      stderr: aa,
+    } = await executeCli(['generate-token', '-f', flowPrivateKeyPath, '-c', CLIENT_NAME, '-o', 'https://localhost:8080', '-t', 'raster']);
 
+    console.log('aa ' + aa);
+    console.log('stdout ' + token);
     expect(genTokenExitCode).toEqual(0);
 
     const { exitCode, stdout } = await executeCli(['verify', '-t', token, '-f', flowPublicKeyPath]);
