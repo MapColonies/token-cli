@@ -40,6 +40,12 @@ interface ExecuteReturn {
   exitCode: number | null;
 }
 
+async function handleProcessExitEvent(stderrPromise: Promise<string>, stdoutPromise: Promise<string>): Promise<void> {
+  await stderrPromise;
+  await stdoutPromise;
+  return Promise.resolve();
+}
+
 export const executeCli = async (args: string[] = [], opts: { env: Env } = { env: undefined }): Promise<ExecuteReturn> => {
   const { env = undefined } = opts;
   const promise = new Promise<ExecuteReturn>((resolve, reject) => {
@@ -49,21 +55,13 @@ export const executeCli = async (args: string[] = [], opts: { env: Env } = { env
     const stdoutPromise = readStream(childProcess.stdout).then((value: undefined | string) => (stdout = value ?? ''));
     const stderrPromise = readStream(childProcess.stderr).then((value: undefined | string) => (stderr = value ?? ''));
     childProcess.once('exit', (code) => {
-      stderrPromise
-        .catch(() => {
-          throw new Error('read stderr Stream failed');
-        })
+      handleProcessExitEvent(stderrPromise, stdoutPromise)
         .then(() => {
-          stdoutPromise
-            .catch(() => {
-              throw new Error('read stdout Stream failed');
-            })
-            .then(() => {
-              resolve({ exitCode: code, stdout, stderr });
-            })
-            .catch(() => 'obligatory catch');
+          resolve({ exitCode: code, stdout, stderr });
         })
-        .catch(() => 'obligatory catch');
+        .catch(() => {
+          reject('read streams failed');
+        });
     });
     childProcess.on('error', reject);
   });
