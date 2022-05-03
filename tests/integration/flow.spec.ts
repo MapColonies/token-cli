@@ -35,5 +35,5 @@ describe('flow', function () {
 
     expect(exitCode).toEqual(0);
     expect(JSON.parse(stdout)).toMatchObject({ ao: ['https://localhost:8080'], sub: 'avi', iss: 'mapcolonies-token-cli' });
-  }, 20000);
+  });
 });
