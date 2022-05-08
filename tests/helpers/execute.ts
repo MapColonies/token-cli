@@ -30,7 +30,7 @@ const readStream = async (stream: NodeJS.ReadableStream): Promise<string> => {
       });
     });
   } else {
-    return Promise.reject('stream was closed before test was attached');
+    throw new Error('The parameter stream is not a readable stream');
   }
 };
 
@@ -51,9 +51,9 @@ export const executeCli = async (args: string[] = [], opts: { env: Env } = { env
   const promise = new Promise<ExecuteReturn>((resolve, reject) => {
     const childProcess = createProcess('./src/index.ts', ['--progress=false', ...args], env);
     childProcess.stdin.setDefaultEncoding('utf-8');
-    let stdout!: string, stderr!: string;
-    const stdoutPromise = readStream(childProcess.stdout).then((value: undefined | string) => (stdout = value ?? ''));
-    const stderrPromise = readStream(childProcess.stderr).then((value: undefined | string) => (stderr = value ?? ''));
+    let stdout: string, stderr: string;
+    const stdoutPromise = readStream(childProcess.stdout).then((value: string) => (stdout = value));
+    const stderrPromise = readStream(childProcess.stderr).then((value: string) => (stderr = value));
     childProcess.once('exit', (code) => {
       handleProcessExitEvent(stderrPromise, stdoutPromise)
         .then(() => {

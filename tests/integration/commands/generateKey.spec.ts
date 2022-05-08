@@ -1,9 +1,7 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
 import { executeCli } from '../../helpers/execute';
-import { FILE_STORAGE_DIR, KID } from '../../testConstants';
-
-const EOL = '\n';
+import { EOL, FILE_STORAGE_DIR, KID } from '../../testConstants';
 
 describe('generate-key', function () {
   describe('Happy Path', function () {
