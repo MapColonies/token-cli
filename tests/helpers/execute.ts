@@ -1,5 +1,4 @@
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
-import concatStream from 'concat-stream';
 
 type Env = Record<string, string> | undefined;
 
@@ -16,12 +15,21 @@ const createProcess = (processPath: string, args: string[] = [], env: Env = unde
 };
 
 const readStream = async (stream: NodeJS.ReadableStream): Promise<string> => {
+  if (!stream.readable) {
+    throw new Error('The parameter stream is not a readable stream');
+  }
   return new Promise<string>((resolve, reject) => {
-    stream.pipe(
-      concatStream((result) => {
-        resolve(result.toString());
-      }).on('error', reject)
-    );
+    let str = '';
+    stream.setEncoding('utf-8');
+    stream.on('data', (chunk) => {
+      str += chunk;
+    });
+    stream.on('error', (err) => {
+      reject(err);
+    });
+    stream.on('end', () => {
+      resolve(str);
+    });
   });
 };
 
@@ -31,15 +39,28 @@ interface ExecuteReturn {
   exitCode: number | null;
 }
 
+async function handleProcessExitEvent(stderrPromise: Promise<string>, stdoutPromise: Promise<string>): Promise<{ stdout: string; stderr: string }> {
+  const stderr = await stderrPromise;
+  const stdout = await stdoutPromise;
+  return { stderr, stdout };
+}
+
 export const executeCli = async (args: string[] = [], opts: { env: Env } = { env: undefined }): Promise<ExecuteReturn> => {
   const { env = undefined } = opts;
-  const childProcess = createProcess('./src/index.ts', ['--progress=false', ...args], env);
-  childProcess.stdin.setDefaultEncoding('utf-8');
   const promise = new Promise<ExecuteReturn>((resolve, reject) => {
+    const childProcess = createProcess('./src/index.ts', ['--progress=false', ...args], env);
+    childProcess.stdin.setDefaultEncoding('utf-8');
+
+    const stdoutPromise = readStream(childProcess.stdout);
+    const stderrPromise = readStream(childProcess.stderr);
     childProcess.once('exit', (code) => {
-      Promise.all([readStream(childProcess.stdout), readStream(childProcess.stderr)])
-        .then(([stdout, stderr]) => resolve({ exitCode: code, stdout, stderr }))
-        .catch(reject);
+      handleProcessExitEvent(stderrPromise, stdoutPromise)
+        .then(({ stderr, stdout }) => {
+          resolve({ exitCode: code, stdout, stderr });
+        })
+        .catch(() => {
+          reject('read streams failed');
+        });
     });
     childProcess.on('error', reject);
   });

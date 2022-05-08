@@ -1,9 +1,8 @@
 import { writeFile } from 'fs/promises';
-import { EOL } from 'os';
 import path from 'path';
 import { executeCli } from '../../helpers/execute';
 import { PRIVATE_KEY } from '../../keys';
-import { CLIENT_NAME, FILE_STORAGE_DIR } from '../../testConstants';
+import { CLIENT_NAME, EOL, FILE_STORAGE_DIR } from '../../testConstants';
 
 const privateKeyPath = path.join(FILE_STORAGE_DIR, 'generateTokenPrivateKey.jwk');
 
