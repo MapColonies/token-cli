@@ -12,7 +12,17 @@ describe('generate-token', function () {
   });
   describe('Happy Path', function () {
     it('should return a signed token', async function () {
-      const { exitCode, stdout } = await executeCli(['generate-token', '-f', privateKeyPath, '-c', CLIENT_NAME, '-o', 'https://localhost:8080']);
+      const { exitCode, stdout } = await executeCli([
+        'generate-token',
+        '-f',
+        privateKeyPath,
+        '-c',
+        CLIENT_NAME,
+        '-o',
+        'https://localhost:8080',
+        '-d',
+        'raster',
+      ]);
 
       expect(exitCode).toEqual(0);
       expect(stdout.length).toBeGreaterThan(0);
@@ -36,6 +46,8 @@ describe('generate-token', function () {
         'https://localhost:8080',
         '-o',
         'https://localhost:8080',
+        '-d',
+        'raster',
       ]);
 
       expect(exitCode).toEqual(0);

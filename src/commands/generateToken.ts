@@ -9,6 +9,7 @@ export interface GenerateTokenArguments {
   c: string;
   client: string;
   o: string[] | undefined;
+  d: string[] | undefined;
   progress: boolean;
 }
 
@@ -30,6 +31,12 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
     array: true,
     description: 'the domains that the client will be allowed to make requests from',
   });
+  yargs.option('d', {
+    alias: 'domains',
+    type: 'array',
+    array: true,
+    description: 'the map-colonies domains the client will be allowed to access (raster, 3D, etc)',
+  });
   return yargs as yargs.Argv<GenerateTokenArguments>;
 };
 
@@ -46,6 +53,7 @@ export const handler = async (argv: GenerateTokenArguments): Promise<void> => {
     privateKey,
     argv.client,
     argv.o,
+    argv.d,
     kid
   );
 
