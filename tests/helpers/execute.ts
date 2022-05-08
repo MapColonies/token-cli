@@ -15,23 +15,22 @@ const createProcess = (processPath: string, args: string[] = [], env: Env = unde
 };
 
 const readStream = async (stream: NodeJS.ReadableStream): Promise<string> => {
-  if (stream.readable) {
-    return new Promise<string>((resolve, reject) => {
-      let str = '';
-      stream.setEncoding('utf-8');
-      stream.on('data', (chunk) => {
-        str += chunk;
-      });
-      stream.on('error', (err) => {
-        reject(err);
-      });
-      stream.on('end', () => {
-        resolve(str);
-      });
-    });
-  } else {
+  if (!stream.readable) {
     throw new Error('The parameter stream is not a readable stream');
   }
+  return new Promise<string>((resolve, reject) => {
+    let str = '';
+    stream.setEncoding('utf-8');
+    stream.on('data', (chunk) => {
+      str += chunk;
+    });
+    stream.on('error', (err) => {
+      reject(err);
+    });
+    stream.on('end', () => {
+      resolve(str);
+    });
+  });
 };
 
 interface ExecuteReturn {
@@ -40,10 +39,10 @@ interface ExecuteReturn {
   exitCode: number | null;
 }
 
-async function handleProcessExitEvent(stderrPromise: Promise<string>, stdoutPromise: Promise<string>): Promise<void> {
-  await stderrPromise;
-  await stdoutPromise;
-  return Promise.resolve();
+async function handleProcessExitEvent(stderrPromise: Promise<string>, stdoutPromise: Promise<string>): Promise<{ stdout: string; stderr: string }> {
+  const stderr = await stderrPromise;
+  const stdout = await stdoutPromise;
+  return { stderr, stdout };
 }
 
 export const executeCli = async (args: string[] = [], opts: { env: Env } = { env: undefined }): Promise<ExecuteReturn> => {
@@ -51,12 +50,12 @@ export const executeCli = async (args: string[] = [], opts: { env: Env } = { env
   const promise = new Promise<ExecuteReturn>((resolve, reject) => {
     const childProcess = createProcess('./src/index.ts', ['--progress=false', ...args], env);
     childProcess.stdin.setDefaultEncoding('utf-8');
-    let stdout: string, stderr: string;
-    const stdoutPromise = readStream(childProcess.stdout).then((value: string) => (stdout = value));
-    const stderrPromise = readStream(childProcess.stderr).then((value: string) => (stderr = value));
+
+    const stdoutPromise = readStream(childProcess.stdout);
+    const stderrPromise = readStream(childProcess.stderr);
     childProcess.once('exit', (code) => {
       handleProcessExitEvent(stderrPromise, stdoutPromise)
-        .then(() => {
+        .then(({ stderr, stdout }) => {
           resolve({ exitCode: code, stdout, stderr });
         })
         .catch(() => {
