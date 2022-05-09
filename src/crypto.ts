@@ -34,8 +34,14 @@ export const generateKeyPair = async (kid?: string): Promise<KeyPair> => {
   return jwkPair;
 };
 
-export const generateToken = async (privateKey: KeyLike, client: string, allowedOrigin?: string[], kid?: string): Promise<string> => {
-  return new SignJWT({ ao: allowedOrigin })
+export const generateToken = async (
+  privateKey: KeyLike,
+  client: string,
+  allowedOrigin?: string[],
+  domains?: string[],
+  kid?: string
+): Promise<string> => {
+  return new SignJWT({ ao: allowedOrigin, d: domains })
     .setIssuedAt()
     .setProtectedHeader({ alg: 'RS256', kid })
     .setSubject(client)
