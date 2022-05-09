@@ -10,7 +10,7 @@ import jwkToPem from 'jwk-to-pem';
 import { ISSUER } from './constants';
 import { jwkSchema } from './schemas/jwk';
 
-const SUPPORTED_ALGORITHEMS = ['RSA256'];
+const SUPPORTED_ALGORITHEMS = ['RS256'];
 
 const generateKeyPairAsync = promisify(generateKeyPairCB);
 
@@ -29,7 +29,7 @@ export interface KeyPair {
 export const generateKeyPair = async (kid?: string): Promise<KeyPair> => {
   const { privateKey, publicKey } = await generateKeyPairAsync('rsa', { modulusLength: 2048, publicExponent: 0x10001 });
   const jwkPair = { privateKey: exportJwk(privateKey), publicKey: exportJwk(publicKey) };
-  jwkPair.privateKey.alg = jwkPair.publicKey.alg = 'RSA256';
+  jwkPair.privateKey.alg = jwkPair.publicKey.alg = 'RS256';
   jwkPair.privateKey.kid = jwkPair.publicKey.kid = kid;
   return jwkPair;
 };
