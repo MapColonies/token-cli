@@ -10,6 +10,7 @@ export interface GenerateTokenArguments {
   client: string;
   o: string[] | undefined;
   d: string[] | undefined;
+  t: string | undefined;
   progress: boolean;
 }
 
@@ -25,6 +26,9 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
     demandOption: true,
   });
   yargs.option('c', { alias: 'client', type: 'string', description: 'the name of the client', demandOption: true });
+  // https://github.com/panva/jose/blob/1a3d31c467/src/lib/secs.ts
+  // https://github.com/panva/jose/blob/1a3d31c46756d4190ccc0cb9f35fa9861808ad60/src/jwt/produce.ts
+  yargs.option('t', { alias: 'ttl', type: 'string', description: '(optional) how much ttl from date.now' });
   yargs.option('o', {
     alias: 'origin',
     type: 'array',
@@ -35,7 +39,7 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
     alias: 'domains',
     type: 'array',
     array: true,
-    description: 'the map-colonies domains the client will be allowed to access (raster, 3D, etc)',
+    description: '(optional) the map-colonies domains the client will be allowed to access (raster, 3D, etc)',
   });
   return yargs as yargs.Argv<GenerateTokenArguments>;
 };
@@ -54,7 +58,8 @@ export const handler = async (argv: GenerateTokenArguments): Promise<void> => {
     argv.client,
     argv.o,
     argv.d,
-    kid
+    kid,
+    argv.t
   );
 
   process.stdout.write(token);

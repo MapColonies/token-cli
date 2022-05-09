@@ -39,14 +39,25 @@ export const generateToken = async (
   client: string,
   allowedOrigin?: string[],
   domains?: string[],
-  kid?: string
+  kid?: string,
+  expirationTime?: string
 ): Promise<string> => {
-  return new SignJWT({ ao: allowedOrigin, d: domains })
-    .setIssuedAt()
-    .setProtectedHeader({ alg: 'RS256', kid })
-    .setSubject(client)
-    .setIssuer(ISSUER)
-    .sign(privateKey);
+  if (expirationTime !== undefined) {
+    return new SignJWT({ ao: allowedOrigin, d: domains })
+      .setIssuedAt()
+      .setProtectedHeader({ alg: 'RS256', kid })
+      .setSubject(client)
+      .setIssuer(ISSUER)
+      .setExpirationTime(expirationTime)
+      .sign(privateKey);
+  } else {
+    return new SignJWT({ ao: allowedOrigin, d: domains })
+      .setIssuedAt()
+      .setProtectedHeader({ alg: 'RS256', kid })
+      .setSubject(client)
+      .setIssuer(ISSUER)
+      .sign(privateKey);
+  }
 };
 
 export const verifyToken = async (publicKey: KeyLike, token: string, kid?: string): Promise<JWTPayload> => {
