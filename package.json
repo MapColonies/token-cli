@@ -1,6 +1,6 @@
 {
   "name": "token-cli",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "This a cli for creating and interacting with keys and JWT tokens",
   "main": "./dist/index.js",
   "scripts": {
