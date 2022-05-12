@@ -31,7 +31,8 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
   yargs.option('t', {
     alias: 'ttl',
     type: 'string',
-    description: 'how many TTL from date.now, the package will take the supplied time and add it to the time the token was generated',
+    description:
+      'how many TTL from date.now - for example "2h", the package will then take the supplied time and add it to the time the token was generated',
   });
   yargs.option('o', {
     alias: 'origin',
