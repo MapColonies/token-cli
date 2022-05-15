@@ -40,9 +40,15 @@ export const generateToken = async (
   allowedOrigin?: string[],
   domains?: string[],
   kid?: string,
-  expirationTime?: string
+  expirationTime?: string,
+  additionalData?: string[]
 ): Promise<string> => {
-  const jwt = new SignJWT({ ao: allowedOrigin, d: domains })
+  const additionalValues: Record<string, string> = {};
+  additionalData?.forEach((data) => {
+    const arr = data.split('=');
+    additionalValues[arr[0]] = arr[1];
+  });
+  const jwt = new SignJWT({ ...additionalValues, ao: allowedOrigin, d: domains })
     .setIssuedAt()
     .setProtectedHeader({ alg: 'RS256', kid })
     .setSubject(client)

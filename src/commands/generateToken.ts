@@ -11,6 +11,7 @@ export interface GenerateTokenArguments {
   o: string[] | undefined;
   d: string[] | undefined;
   t: string | undefined;
+  a: string[] | undefined;
   progress: boolean;
 }
 
@@ -46,6 +47,12 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
     array: true,
     description: 'the map-colonies domains the client will be allowed to access (raster, 3D, etc)',
   });
+  yargs.option('a', {
+    alias: 'additional-data',
+    type: 'array',
+    array: true,
+    description: 'additional data to add to token. must be in format: "<key>=<value>"',
+  });
   return yargs as yargs.Argv<GenerateTokenArguments>;
 };
 
@@ -64,7 +71,8 @@ export const handler = async (argv: GenerateTokenArguments): Promise<void> => {
     argv.o,
     argv.d,
     kid,
-    argv.t
+    argv.t,
+    argv.a
   );
 
   process.stdout.write(token);
