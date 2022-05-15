@@ -45,7 +45,7 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
     alias: 'domains',
     type: 'array',
     array: true,
-    description: '(optional) the map-colonies domains the client will be allowed to access (raster, 3D, etc)',
+    description: 'the map-colonies domains the client will be allowed to access (raster, 3D, etc)',
   });
   yargs.option('a', {
     alias: 'additional-data',
