@@ -10,6 +10,7 @@ export interface GenerateTokenArguments {
   client: string;
   o: string[] | undefined;
   d: string[] | undefined;
+  t: string | undefined;
   progress: boolean;
 }
 
@@ -25,6 +26,14 @@ export const builder: yargs.CommandBuilder<{}, GenerateTokenArguments> = (yargs)
     demandOption: true,
   });
   yargs.option('c', { alias: 'client', type: 'string', description: 'the name of the client', demandOption: true });
+  // the jose package expects a string describing the TTL duration, for example '2h'
+  // https://github.com/panva/jose/blob/1a3d31c467/src/lib/secs.ts
+  yargs.option('t', {
+    alias: 'ttl',
+    type: 'string',
+    description:
+      'how many TTL from date.now - for example "2h", the package will then take the supplied time and add it to the time the token was generated',
+  });
   yargs.option('o', {
     alias: 'origin',
     type: 'array',
@@ -54,7 +63,8 @@ export const handler = async (argv: GenerateTokenArguments): Promise<void> => {
     argv.client,
     argv.o,
     argv.d,
-    kid
+    kid,
+    argv.t
   );
 
   process.stdout.write(token);
