@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/MapColonies/token-cli/compare/v2.0.1...v2.1.0) (2023-04-20)
+
+
+### Features
+
+* add expiration time ([#10](https://github.com/MapColonies/token-cli/issues/10)) ([c1cede9](https://github.com/MapColonies/token-cli/commit/c1cede9839d8a090b64bced6b313eed60ccfa73b))
+
 ### [2.0.1](https://github.com/MapColonies/token-cli/compare/v2.0.0...v2.0.1) (2022-05-09)
 
 ## 2.0.0 (2022-05-09)
